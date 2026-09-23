@@ -1,0 +1,62 @@
+# Python bytecode & caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+.env
+
+# Environment variables / secrets
+.env
+.env.local
+*.env
+
+# Temp / scratch files
+tmp_*.png
+tmp_*.jpg
+temp_*.zip
+*.tmp
+
+# HuggingFace model cache (large pretrained weights — downloaded at runtime)
+# These live in ~/.cache/huggingface by default, but guard against accidental local caches
+models/audio/*.bin
+models/audio/*.safetensors
+models/visual/*.bin
+models/visual/*.safetensors
+models/puzzle/best.pt
+
+# Jupyter Notebooks checkpoints
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE / editor
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Test / coverage artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# Build / distribution
+dist/
+build/
+*.egg-info/
+
+# Log files
+*.log
+
+# Large downloaded archives (reproducible via scripts/download_real_fixtures.py)
+data/temp_*.zip
