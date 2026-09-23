@@ -60,3 +60,9 @@ build/
 
 # Large downloaded archives (reproducible via scripts/download_real_fixtures.py)
 data/temp_*.zip
+
+# Frontend / Next.js
+node_modules/
+.next/
+out/
+
