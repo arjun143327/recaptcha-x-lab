@@ -1,0 +1,400 @@
+{
+  "puzzle_slider_01.png": {
+    "offset_x": 185,
+    "y": 75,
+    "piece_width": 44,
+    "piece_height": 44,
+    "image_size": [
+      400,
+      200
+    ],
+    "aspect_ratio": 2.0
+  },
+  "puzzle_slider_02.png": {
+    "offset_x": 240,
+    "y": 60,
+    "piece_width": 44,
+    "piece_height": 44,
+    "image_size": [
+      400,
+      200
+    ],
+    "aspect_ratio": 2.0
+  },
+  "puzzle_slider_03.png": {
+    "offset_x": 150,
+    "y": 90,
+    "piece_width": 44,
+    "piece_height": 44,
+    "image_size": [
+      400,
+      200
+    ],
+    "aspect_ratio": 2.0
+  },
+  "puzzle_slider_04.png": {
+    "offset_x": 280,
+    "y": 70,
+    "piece_width": 44,
+    "piece_height": 44,
+    "image_size": [
+      400,
+      200
+    ],
+    "aspect_ratio": 2.0
+  },
+  "puzzle_slider_05.png": {
+    "offset_x": 210,
+    "y": 80,
+    "piece_width": 44,
+    "piece_height": 44,
+    "image_size": [
+      400,
+      200
+    ],
+    "aspect_ratio": 2.0
+  },
+  "real_puzzle_geetest_01.png": {
+    "source": "peduajo/geetest-slice-captcha-solver",
+    "offset_x": 104.0,
+    "y": 48.0,
+    "tolerance_px": 5.0,
+    "is_real_puzzle": true,
+    "description": "Real Geetest slider captcha background with cutout gap [DEMO LEAKAGE: Sourced from repo README/example folder]",
+    "is_demo_leakage": true
+  },
+  "real_puzzle_crack_01.png": {
+    "source": "Henryhaohao/Slider_Captcha_Crack",
+    "offset_x": 202.0,
+    "y": 32.0,
+    "tolerance_px": 5.0,
+    "is_real_puzzle": true,
+    "description": "Real Slider Captcha Crack sample 1 [DEMO LEAKAGE: Sourced from repo README/example folder]",
+    "is_demo_leakage": true
+  },
+  "real_puzzle_crack_02.png": {
+    "source": "Henryhaohao/Slider_Captcha_Crack",
+    "offset_x": 75.0,
+    "y": 75.0,
+    "tolerance_px": 5.0,
+    "is_real_puzzle": true,
+    "description": "Real Slider Captcha Crack sample 2 [DEMO LEAKAGE: Sourced from repo README/example folder]",
+    "is_demo_leakage": true
+  },
+  "real_puzzle_slide_0755.png": {
+    "source": "Python3WebSpider/DeepLearningSlideCaptcha (official validation split)",
+    "offset_x": 156.8,
+    "offset_x_center": 200.0,
+    "y": 95.3,
+    "bbox": [
+      156.8,
+      95.3,
+      86.3,
+      77.3
+    ],
+    "tolerance_px": 12.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real slider CAPTCHA 755 from independent validation split"
+  },
+  "real_puzzle_slide_0508.png": {
+    "source": "Python3WebSpider/DeepLearningSlideCaptcha (official validation split)",
+    "offset_x": 273.8,
+    "offset_x_center": 317.0,
+    "y": 173.3,
+    "bbox": [
+      273.8,
+      173.3,
+      86.3,
+      77.3
+    ],
+    "tolerance_px": 12.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real slider CAPTCHA 508 from independent validation split"
+  },
+  "real_puzzle_slide_0961.png": {
+    "source": "Python3WebSpider/DeepLearningSlideCaptcha (official validation split)",
+    "offset_x": 201.8,
+    "offset_x_center": 245.0,
+    "y": -9.7,
+    "bbox": [
+      201.8,
+      -9.7,
+      86.3,
+      77.3
+    ],
+    "tolerance_px": 12.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real slider CAPTCHA 961 from independent validation split"
+  },
+  "real_puzzle_slide_0192.png": {
+    "source": "Python3WebSpider/DeepLearningSlideCaptcha (official validation split)",
+    "offset_x": 120.8,
+    "offset_x_center": 164.0,
+    "y": 141.3,
+    "bbox": [
+      120.8,
+      141.3,
+      86.3,
+      77.3
+    ],
+    "tolerance_px": 12.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real slider CAPTCHA 192 from independent validation split"
+  },
+  "real_puzzle_slide_0016.png": {
+    "source": "Python3WebSpider/DeepLearningSlideCaptcha (official validation split)",
+    "offset_x": 191.8,
+    "offset_x_center": 235.0,
+    "y": 9.3,
+    "bbox": [
+      191.8,
+      9.3,
+      86.3,
+      77.3
+    ],
+    "tolerance_px": 12.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real slider CAPTCHA 16 from independent validation split"
+  },
+  "real_puzzle_slide_0391.png": {
+    "source": "Python3WebSpider/DeepLearningSlideCaptcha (official validation split)",
+    "offset_x": 239.8,
+    "offset_x_center": 283.0,
+    "y": 78.3,
+    "bbox": [
+      239.8,
+      78.3,
+      86.3,
+      77.3
+    ],
+    "tolerance_px": 12.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real slider CAPTCHA 391 from independent validation split"
+  },
+  "real_puzzle_slide_0848.png": {
+    "source": "Python3WebSpider/DeepLearningSlideCaptcha (official validation split)",
+    "offset_x": 313.8,
+    "offset_x_center": 357.0,
+    "y": 122.3,
+    "bbox": [
+      313.8,
+      122.3,
+      86.3,
+      77.3
+    ],
+    "tolerance_px": 12.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real slider CAPTCHA 848 from independent validation split"
+  },
+  "real_puzzle_slide_0870.png": {
+    "source": "Python3WebSpider/DeepLearningSlideCaptcha (official validation split)",
+    "offset_x": 263.8,
+    "offset_x_center": 307.0,
+    "y": 47.3,
+    "bbox": [
+      263.8,
+      47.3,
+      86.3,
+      77.3
+    ],
+    "tolerance_px": 12.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real slider CAPTCHA 870 from independent validation split"
+  },
+  "real_puzzle_slide_0560.png": {
+    "source": "Python3WebSpider/DeepLearningSlideCaptcha (official validation split)",
+    "offset_x": 309.8,
+    "offset_x_center": 353.0,
+    "y": -2.7,
+    "bbox": [
+      309.8,
+      -2.7,
+      86.3,
+      77.3
+    ],
+    "tolerance_px": 12.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real slider CAPTCHA 560 from independent validation split"
+  },
+  "real_puzzle_slide_0905.png": {
+    "source": "Python3WebSpider/DeepLearningSlideCaptcha (official validation split)",
+    "offset_x": 275.8,
+    "offset_x_center": 319.0,
+    "y": 1.3,
+    "bbox": [
+      275.8,
+      1.3,
+      86.3,
+      77.3
+    ],
+    "tolerance_px": 12.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real slider CAPTCHA 905 from independent validation split"
+  },
+  "real_puzzle_slide_0010.png": {
+    "source": "Python3WebSpider/DeepLearningSlideCaptcha (official validation split)",
+    "offset_x": 138.8,
+    "offset_x_center": 182.0,
+    "y": 48.3,
+    "bbox": [
+      138.8,
+      48.3,
+      86.3,
+      77.3
+    ],
+    "tolerance_px": 12.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real slider CAPTCHA 10 from independent validation split"
+  },
+  "real_puzzle_slide_0011.png": {
+    "source": "Python3WebSpider/DeepLearningSlideCaptcha (official validation split)",
+    "offset_x": 185.8,
+    "offset_x_center": 229.0,
+    "y": -14.7,
+    "bbox": [
+      185.8,
+      -14.7,
+      86.3,
+      77.3
+    ],
+    "tolerance_px": 12.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real slider CAPTCHA 11 from independent validation split"
+  },
+  "real_puzzle_slide_0012.png": {
+    "source": "Python3WebSpider/DeepLearningSlideCaptcha (official validation split)",
+    "offset_x": 161.8,
+    "offset_x_center": 205.0,
+    "y": 25.3,
+    "bbox": [
+      161.8,
+      25.3,
+      86.3,
+      77.3
+    ],
+    "tolerance_px": 12.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real slider CAPTCHA 12 from independent validation split"
+  },
+  "real_puzzle_slide_0013.png": {
+    "source": "Python3WebSpider/DeepLearningSlideCaptcha (official validation split)",
+    "offset_x": 271.8,
+    "offset_x_center": 315.0,
+    "y": 132.3,
+    "bbox": [
+      271.8,
+      132.3,
+      86.3,
+      77.3
+    ],
+    "tolerance_px": 12.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real slider CAPTCHA 13 from independent validation split"
+  },
+  "real_puzzle_slide_0014.png": {
+    "source": "Python3WebSpider/DeepLearningSlideCaptcha (official validation split)",
+    "offset_x": 183.8,
+    "offset_x_center": 227.0,
+    "y": 61.3,
+    "bbox": [
+      183.8,
+      61.3,
+      86.3,
+      77.3
+    ],
+    "tolerance_px": 12.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real slider CAPTCHA 14 from independent validation split"
+  },
+  "real_puzzle_slide_0015.png": {
+    "source": "Python3WebSpider/DeepLearningSlideCaptcha (official validation split)",
+    "offset_x": 125.8,
+    "offset_x_center": 169.0,
+    "y": -1.7,
+    "bbox": [
+      125.8,
+      -1.7,
+      86.3,
+      77.3
+    ],
+    "tolerance_px": 12.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real slider CAPTCHA 15 from independent validation split"
+  },
+  "real_puzzle_mosslinn_bridge.png": {
+    "source": "MossLinn/harmonyos-slider-captcha-benchmark (offline GUI-agent benchmark)",
+    "offset_x": 327.0,
+    "y": 180.0,
+    "bbox": [
+      327.0,
+      180.0,
+      140.0,
+      140.0
+    ],
+    "tolerance_px": 24.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real GUI-agent slider benchmark scene 'bridge'"
+  },
+  "real_puzzle_mosslinn_library.png": {
+    "source": "MossLinn/harmonyos-slider-captcha-benchmark (offline GUI-agent benchmark)",
+    "offset_x": 438.0,
+    "y": 245.0,
+    "bbox": [
+      438.0,
+      245.0,
+      140.0,
+      140.0
+    ],
+    "tolerance_px": 24.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real GUI-agent slider benchmark scene 'library'"
+  },
+  "real_puzzle_mosslinn_market.png": {
+    "source": "MossLinn/harmonyos-slider-captcha-benchmark (offline GUI-agent benchmark)",
+    "offset_x": 558.0,
+    "y": 150.0,
+    "bbox": [
+      558.0,
+      150.0,
+      140.0,
+      140.0
+    ],
+    "tolerance_px": 24.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real GUI-agent slider benchmark scene 'market'"
+  },
+  "real_puzzle_mosslinn_station.png": {
+    "source": "MossLinn/harmonyos-slider-captcha-benchmark (offline GUI-agent benchmark)",
+    "offset_x": 653.0,
+    "y": 220.0,
+    "bbox": [
+      653.0,
+      220.0,
+      140.0,
+      140.0
+    ],
+    "tolerance_px": 24.0,
+    "is_real_puzzle": true,
+    "is_demo_leakage": false,
+    "description": "Real GUI-agent slider benchmark scene 'station'"
+  }
+}
