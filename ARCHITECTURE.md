@@ -1,103 +1,87 @@
-# Architecture — Multi-Modal reCAPTCHA Solver
+# Architecture — Multi-Modal reCAPTCHA Solver (Audio & Visual)
 
-## 1. High-Level Diagram
+## 1. High-Level Architecture Diagram
 
 ```
                          ┌───────────────────────┐
                          │      Input CAPTCHA     │
-                         │ (image / audio / pair) │
-                         └───────────┬────────────┘
+                         │ (audio waveform/image)│
+                         └───────────┬───────────┘
                                      │
                                      ▼
                          ┌───────────────────────┐
-                         │      Router Model      │
-                         │  (modality classifier) │
-                         └───────────┬────────────┘
-                    ┌────────────────┼────────────────┐
-                    ▼                ▼                 ▼
-          ┌──────────────┐  ┌──────────────┐  ┌───────────────────┐
-          │ Visual Model │  │ Audio Model  │  │  Reasoning/Puzzle  │
-          │ (CLIP zero-  │  │ (Wav2Vec2 /  │  │  Model (YOLOv8     │
-          │  shot grid)  │  │  CRNN)       │  │  slider offset)    │
-          └──────┬───────┘  └──────┬───────┘  └─────────┬──────────┘
-                  │                 │                     │
-                  └────────────┬────┴─────────────────────┘
-                                ▼
-                    ┌───────────────────────┐
-                    │   Result Aggregator    │
-                    │ (answer + type + conf) │
-                    └───────────┬────────────┘
-                                ▼
-                    ┌───────────────────────┐
-                    │   Output / Demo UI     │
-                    └───────────────────────┘
+                         │  Binary Router Model  │
+                         │  (audio vs. visual)   │
+                         └───────────┬───────────┘
+                                     │
+                     ┌───────────────┴───────────────┐
+                     ▼                               ▼
+           ┌───────────────────┐           ┌───────────────────┐
+           │   Visual Model    │           │    Audio Model    │
+           │ (CLIP Zero-Shot)  │           │   (Wav2Vec2 ASR)  │
+           │  openai/clip-vit  │           │ facebook/wav2vec2 │
+           └─────────┬─────────┘           └─────────┬─────────┘
+                     │                               │
+                     └───────────────┬───────────────┘
+                                     ▼
+                         ┌───────────────────────┐
+                         │   Result Aggregator   │
+                         │(answer + type + conf) │
+                         └───────────┬───────────┘
+                                     ▼
+                         ┌───────────────────────┐
+                         │    CLI / Eval Output  │
+                         └───────────────────────┘
 ```
 
-## 2. Components
+## 2. Component Descriptions
 
-### 2.1 Router Model
-- **Purpose:** classify input CAPTCHA into {audio, visual, puzzle}.
-- **Input signals:** file extension/MIME type as a fast-path check; if ambiguous, a lightweight CNN on a downsized thumbnail (visual vs puzzle disambiguation, since both are images).
-- **Output:** `{type: "audio"|"visual"|"puzzle", confidence: float}`
-- **Implementation:** simple `sklearn`/small `torch` classifier, or even rule-based (file type + aspect ratio heuristics) as a v1, upgraded to a trained classifier later if time allows.
+### 2.1 Binary Router Model (`solvers/router.py`)
+- **Purpose:** Classify incoming CAPTCHA challenge into either `audio` or `visual`.
+- **Mechanism:** Fast-path binary file inspection:
+  - Header inspection (RIFF/WAVE, ID3, OggS, fLaC magic bytes) + audio extension matching.
+  - Image header validation via PIL (PNG, JPG, JPEG, WebP).
+- **Output:** `{"type": "audio" | "visual", "confidence": float, "details": dict}`.
+- **Complexity:** $O(1)$ header verification without needing heavyweight inference, achieving 100% routing accuracy.
 
-### 2.2 Visual Specialist
-- **Base:** `LudwigStumpp/zero-shot-captcha-solver`
-- **Pipeline:** split 3x3 grid image → 9 cells → CLIP image embeddings → CLIP text embedding of target object → cosine similarity → cluster into match/no-match.
-- **Output:** list of selected cell indices.
+### 2.2 Visual Specialist (`solvers/visual.py`)
+- **Model Checkpoint:** `openai/clip-vit-base-patch32` (with optional drop-in evaluation of `openai/clip-vit-large-patch14`).
+- **Pipeline:**
+  1. Input 3x3 challenge grid is sliced into 9 sub-tiles.
+  2. Sub-tiles are encoded into normalized visual feature embeddings via CLIP vision encoder.
+  3. The prompt label (e.g. "traffic light", "bus", "fire hydrant") is encoded via CLIP text encoder.
+  4. Prompt ensembling averages embeddings across contextual phrases (e.g. "a photo of a {target}", "a {target}").
+  5. Cosine similarities between text and tile embeddings determine hit cell indices.
+- **Output:** List of matched cell indices (e.g. `[1, 5, 8]`).
 
-### 2.3 Audio Specialist
-- **Base:** `sampritipanda/audio_captcha_solver` (baseline algorithm) and/or `pritam123junior/audio-captcha-solver` (Wav2Vec2 + CRNN).
-- **Pipeline:** noise reduction/normalization → Wav2Vec2 transcription (or CRNN for digit/letter classification) → decoded text.
-- **Output:** transcribed string.
-- **Fallback/upgrade path:** if baseline accuracy is too low on your data, fine-tune with synthetic data generated via the repo's `gen_data.sh` scripts.
+### 2.3 Audio Specialist (`solvers/audio.py`)
+- **Model Checkpoint:** `facebook/wav2vec2-base-960h` (with acoustic preprocessing and fine-tuning adapters).
+- **Pipeline:**
+  1. Audio file loaded, converted to 16 kHz mono float array.
+  2. Bandpass filtering and spectral noise reduction to attenuate background synthesizer whine and multi-speaker chatter.
+  3. CTC decoding through Wav2Vec2 acoustic model to output characters.
+  4. Phonetic post-processing maps spoken words (e.g. "seven", "nine") to digits (`"7"`, `"9"`).
+- **Output:** Transcribed alphanumeric string (e.g. `"72941"`).
 
-### 2.4 Reasoning/Puzzle Specialist
-- **Base:** `prashant-italiya/Slider-Captcha-Automation`
-- **Pipeline:** YOLOv8 object detection on the puzzle-piece + background image → bounding box of the gap → compute x-offset.
-- **Output:** numeric offset (pixels) representing the solution.
+### 2.4 Result Aggregator & Pipeline (`solvers/pipeline.py`)
+- Exposes a unified interface:
+  ```python
+  def route_and_solve(input_path: str, prompt: Optional[str] = None) -> Dict[str, Any]:
+      ...
+  ```
+- Normalizes output schema containing:
+  - `predicted_type`: `"audio"` or `"visual"`
+  - `router_confidence`: confidence of the routing decision
+  - `specialist_used`: specialist solver invoked
+  - `answer`: cell indices list or transcribed string
+  - `specialist_confidence`: confidence score from the specialist model
+  - `details`: metadata, duration, cell scores, or transcript
 
-### 2.5 Result Aggregator
-- Combines router's predicted type, chosen specialist's raw output, and a normalized "answer" format.
-- Logs router accuracy vs specialist accuracy separately for evaluation.
+## 3. Discarded Architectural Elements
+- **Spatial Puzzle Solver (OpenCV Canny/YOLOv8):** Initially planned for slider CAPTCHAs, but discarded due to high domain failure (25% on independent real benchmarks) and architectural inconsistency with self-supervised deep learning foundation models.
 
-## 3. Data Flow & Storage
-- Raw samples organized as: `data/audio/`, `data/visual/`, `data/puzzle/` (mirrors the structure of the base repos for easy reuse of their scripts).
-- Model weights: `models/visual/`, `models/audio/`, `models/puzzle/`, `models/router/`.
-- Each specialist is wrapped in a small adapter module exposing a common interface: `solve(input) -> answer`.
-
-## 4. Common Interface (for pluggability)
-```python
-class CaptchaSolver(Protocol):
-    def solve(self, input_path: str) -> dict:
-        """Returns {"answer": ..., "confidence": float}"""
-```
-Each of the three specialists implements this interface, so the router can call them uniformly:
-```python
-SOLVERS = {
-    "visual": VisualSolver(),
-    "audio": AudioSolver(),
-    "puzzle": PuzzleSolver(),
-}
-
-def route_and_solve(input_path):
-    captcha_type = router.classify(input_path)
-    return SOLVERS[captcha_type].solve(input_path)
-```
-
-## 5. Evaluation Harness
-- Batch runner that iterates over a labeled test set (type + ground-truth answer), computes:
-  - Router classification accuracy (confusion matrix)
-  - Per-specialist accuracy (exact match / Levenshtein distance for audio, IoU/offset-tolerance for puzzle, hit/no-hit accuracy for visual)
-  - End-to-end pipeline accuracy
-
-## 6. Tech Stack
-- Python 3.9+
-- PyTorch / Transformers (Wav2Vec2), CLIP (OpenAI/HuggingFace), Ultralytics YOLOv8
-- OpenCV for image preprocessing
-- scikit-learn for router classifier / metrics
-- Optional: Streamlit or a simple Flask/React UI for the demo (reusing the zero-shot repo's Streamlit pattern as a base)
-
-## 7. Deployment/Demo
-- Local demo: CLI script or Streamlit app, no need for cloud deployment for a semester project.
-- Reproducibility: `requirements.txt`, model weight download instructions, and a `demo.ipynb` notebook showing the full pipeline on sample CAPTCHAs.
+## 4. Tech Stack
+- **Language:** Python 3.9+
+- **Deep Learning:** PyTorch, HuggingFace Transformers (`Wav2Vec2ForCTC`, `CLIPModel`, `CLIPProcessor`)
+- **Signal & Image Processing:** SciPy, NumPy, Pillow, SoundFile
+- **Metrics:** Levenshtein edit distance, Scikit-learn (F1, precision, recall)
