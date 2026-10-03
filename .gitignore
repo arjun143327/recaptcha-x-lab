@@ -1,3 +1,20 @@
+# Secrets, tokens & credentials (CRITICAL - NEVER COMMIT)
+.env
+.env.*
+*.env
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+secrets.json
+credentials.json
+*token*
+*secret*
+!tokenizers/
+!tokenizer*
+
 # Python bytecode & caches
 __pycache__/
 *.py[cod]
@@ -8,26 +25,33 @@ __pycache__/
 .venv/
 venv/
 env/
-.env
+ENV/
 
-# Environment variables / secrets
-.env
-.env.local
-*.env
-
-# Temp / scratch files
-tmp_*.png
-tmp_*.jpg
-temp_*.zip
+# Temp & scratch files
+tmp/
+temp/
+scratch/
+tmp_*
+temp_*
 *.tmp
+*.log
+*.bak
+*.swp
 
-# HuggingFace model cache (large pretrained weights — downloaded at runtime)
-# These live in ~/.cache/huggingface by default, but guard against accidental local caches
-models/audio/*.bin
-models/audio/*.safetensors
-models/visual/*.bin
-models/visual/*.safetensors
-models/puzzle/best.pt
+# HuggingFace & ML model weights (large binaries - download at runtime)
+models/audio/
+models/visual/
+models/**/*.safetensors
+models/**/*.bin
+models/**/*.pt
+models/**/*.pth
+models/**/*.onnx
+*.safetensors
+*.bin
+
+# Training datasets / temporary archives
+data/audio/train/
+data/temp_*.zip
 
 # Jupyter Notebooks checkpoints
 .ipynb_checkpoints/
@@ -55,14 +79,7 @@ dist/
 build/
 *.egg-info/
 
-# Log files
-*.log
-
-# Large downloaded archives (reproducible via scripts/download_real_fixtures.py)
-data/temp_*.zip
-
-# Frontend / Next.js
+# Frontend / Next.js (pruned)
 node_modules/
 .next/
 out/
-
