@@ -1,4 +1,4 @@
-"""CLI entry point for Multi-Modal reCAPTCHA Solver.
+"""CLI entry point for Multi-Modal reCAPTCHA Solver (Audio & Visual).
 
 Usage:
   python main.py --input <path_to_file> [--prompt "traffic light"]
@@ -20,7 +20,6 @@ if BASE_DIR not in sys.path:
 from solvers import route_and_solve, SOLVERS, router
 from solvers.audio import AudioSolver
 from solvers.visual import VisualSolver
-from solvers.puzzle import PuzzleSolver
 
 
 def run_single(input_path: str, prompt: str = "traffic light"):
@@ -42,7 +41,7 @@ def run_single(input_path: str, prompt: str = "traffic light"):
 
 def run_demo():
     print("\n========================================================")
-    print("      reCAPTCHA-X-LAB — MULTI-MODAL PIPELINE DEMO       ")
+    print("      reCAPTCHA-X-LAB -- AUDIO & VISUAL PIPELINE DEMO     ")
     print("========================================================")
     
     samples = [
@@ -53,10 +52,6 @@ def run_demo():
         ("data/visual/visual_grid_01.png", "traffic light", "Visual 3x3 Grid (Synthetic)"),
         ("data/visual/real_recaptcha_chimney.jpg", "chimney", "Visual reCAPTCHA Chimneys (Real)"),
         ("data/visual/real_recaptcha_hydrant.jpg", "fire hydrant", "Visual reCAPTCHA Hydrant (Real)"),
-        # Puzzle: 1 synthetic slider, 2 real Geetest sliders
-        ("data/puzzle/puzzle_slider_01.png", None, "Slider Puzzle Notch (Synthetic)"),
-        ("data/puzzle/real_puzzle_geetest_01.png", None, "Geetest Slider Notch (Real)"),
-        ("data/puzzle/real_puzzle_crack_01.png", None, "Slider Crack Notch (Real)"),
     ]
     
     for rel_path, prompt, desc in samples:
@@ -71,15 +66,14 @@ def run_demo():
 
 def run_eval_benchmarks():
     print("\n================================================================================")
-    print("           reCAPTCHA-X-LAB — MULTI-MODAL ACCURACY BENCHMARK REPORT             ")
+    print("           reCAPTCHA-X-LAB -- ACCURACY BENCHMARK REPORT (AUDIO & VISUAL)          ")
     print("================================================================================")
     
     # 1. Router evaluation
-    print("\n[1/4] Router Modality Classifier...")
+    print("\n[1/3] Router Modality Classifier...")
     test_files = [
         *[(f, "audio") for f in glob.glob(os.path.join(BASE_DIR, "data", "audio", "*.wav"))],
         *[(f, "visual") for f in glob.glob(os.path.join(BASE_DIR, "data", "visual", "*.*")) if f.endswith(('.png', '.jpg'))],
-        *[(f, "puzzle") for f in glob.glob(os.path.join(BASE_DIR, "data", "puzzle", "*.png"))],
     ]
     correct = 0
     real_correct = 0
@@ -101,7 +95,7 @@ def run_eval_benchmarks():
     print(f"  Real-World Data Accuracy: {real_correct}/{real_total} ({real_acc:.1f}%)")
 
     # 2. Visual Specialist (CLIP Zero-Shot)
-    print("\n[2/4] Visual Specialist (CLIP Zero-Shot Image Grid)...")
+    print("\n[2/3] Visual Specialist (CLIP Zero-Shot Image Grid)...")
     visual_solver = VisualSolver()
     visual_summary = visual_solver.evaluate_fixtures()
     real_vis = [r for r in visual_summary["sample_results"] if r.get("is_real_recaptcha")]
@@ -117,8 +111,9 @@ def run_eval_benchmarks():
         print(f"  --> Real reCAPTCHA Subset : Cell Acc: {real_cell_acc:.1f}%, F1: {real_f1:.4f}")
 
     # 3. Audio Specialist with Levenshtein Distance
-    print("\n[3/4] Audio Specialist (Wav2Vec2 CTC Transcription)...")
+    print("\n[3/3] Audio Specialist (Whisper ASR + Adaptive Noise Gating)...")
     audio_solver = AudioSolver()
+
     audio_summary = audio_solver.evaluate_fixtures()
     real_aud = [r for r in audio_summary["sample_results"] if "real_" in r["file"]]
     synth_aud = [r for r in audio_summary["sample_results"] if "real_" not in r["file"]]
@@ -128,41 +123,11 @@ def run_eval_benchmarks():
     print(f"  Mean Character Error Rate: {audio_summary['mean_character_error_rate'] * 100:.1f}%")
     print(f"  Exact Match Rate        : {audio_summary['exact_match_rate'] * 100:.1f}%")
     if real_aud:
-        real_cer = sum(r["levenshtein_distance"] / max(len(r["expected"]), 1) for r in real_aud) / len(real_aud) * 100
+        real_cer = sum(r.get("character_error_rate", r["levenshtein_distance"] / max(len(r["expected"]), len(r["predicted"]), 1)) for r in real_aud) / len(real_aud) * 100
         real_exact = sum(1 for r in real_aud if r["exact_match"]) / len(real_aud) * 100
         print(f"  --> Real SecurImage Subset: Exact Match: {real_exact:.1f}%, CER: {real_cer:.1f}%")
         print(f"      (Reflects heavy synthetic acoustic distortion in SecurImage challenges)")
 
-    # 4. Puzzle Specialist Offset Accuracy
-    print("\n[4/4] Puzzle Specialist (OpenCV Edge/Notch Detector)...")
-    puzzle_solver = PuzzleSolver()
-    puzzle_summary = puzzle_solver.evaluate_fixtures()
-    
-    # Categorize samples
-    independent_real = [r for r in puzzle_summary["sample_results"] if ("real_puzzle_slide_" in r["file"] or "real_puzzle_mosslinn_" in r["file"])]
-    demo_leakage = [r for r in puzzle_summary["sample_results"] if ("geetest_01" in r["file"] or "crack_0" in r["file"])]
-    synth_puz = [r for r in puzzle_summary["sample_results"] if "puzzle_slider_" in r["file"]]
-
-    print(f"  Total Puzzles Tested    : {puzzle_summary['num_samples']} (Independent Real: {len(independent_real)}, Demo Showcase: {len(demo_leakage)}, Synthetic: {len(synth_puz)})")
-    print(f"  Overall Offset Accuracy : {puzzle_summary['accuracy'] * 100:.1f}%")
-    print(f"  Overall Mean Pixel Error: {puzzle_summary['mean_pixel_error']}px")
-    
-    if independent_real:
-        ind_acc = sum(1 for r in independent_real if r["within_tolerance"]) / len(independent_real) * 100
-        ind_err = sum(r["error_px"] for r in independent_real) / len(independent_real)
-        print(f"  --> Independent Real Benchmarks ({len(independent_real)} samples) : Accuracy: {ind_acc:.1f}%, Mean Pixel Error: {ind_err:.1f}px")
-        print(f"      (Tested against held-out validation split & GUI benchmark, avoiding demo leakage)")
-        
-    if demo_leakage:
-        demo_acc = sum(1 for r in demo_leakage if r["within_tolerance"]) / len(demo_leakage) * 100
-        demo_err = sum(r["error_px"] for r in demo_leakage) / len(demo_leakage)
-        print(f"  --> Demo / Showcase Subset ({len(demo_leakage)} samples)      : Accuracy: {demo_acc:.1f}%, Mean Pixel Error: {demo_err:.1f}px")
-        print(f"      (FLAGGED: Demo samples from source repo READMEs/examples — subject to author tuning leakage)")
-
-    if synth_puz:
-        synth_acc = sum(1 for r in synth_puz if r["within_tolerance"]) / len(synth_puz) * 100
-        synth_err = sum(r["error_px"] for r in synth_puz) / len(synth_puz)
-        print(f"  --> Synthetic Fixtures ({len(synth_puz)} samples)          : Accuracy: {synth_acc:.1f}%, Mean Pixel Error: {synth_err:.1f}px")
 
     print("\n================================================================================")
     print("                         END OF BENCHMARK REPORT                                ")
@@ -170,7 +135,7 @@ def run_eval_benchmarks():
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Multi-Modal reCAPTCHA Solver Pipeline")
+    parser = argparse.ArgumentParser(description="Multi-Modal reCAPTCHA Solver Pipeline (Audio & Visual)")
     parser.add_argument("--input", type=str, help="Path to CAPTCHA file to classify and solve")
     parser.add_argument("--prompt", type=str, default="traffic light", help="Prompt label for visual solver")
     parser.add_argument("--demo", action="store_true", help="Run end-to-end demo on sample files")

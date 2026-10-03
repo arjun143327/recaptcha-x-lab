@@ -30,12 +30,6 @@ class TestRouter(unittest.TestCase):
         self.assertEqual(res["type"], "visual")
         self.assertGreaterEqual(res["confidence"], 0.90)
 
-    def test_puzzle_classification(self):
-        puzzle_path = os.path.join(DATA_DIR, "puzzle", "puzzle_slider_01.png")
-        res = self.router.classify(puzzle_path)
-        self.assertEqual(res["type"], "puzzle")
-        self.assertGreaterEqual(res["confidence"], 0.90)
-
     def test_invalid_file_raises_error(self):
         with self.assertRaises(InvalidInputError):
             self.router.classify("non_existent_file.xyz")

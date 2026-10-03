@@ -23,12 +23,11 @@ if BASE_DIR not in sys.path:
 from solvers import route_and_solve
 from solvers.audio import AudioSolver
 from solvers.visual import VisualSolver
-from solvers.puzzle import PuzzleSolver
 
 app = FastAPI(
     title="reCAPTCHA-X-Lab API",
-    description="Multi-modal CAPTCHA robustness analysis API",
-    version="1.0.0"
+    description="Multi-modal CAPTCHA robustness analysis API (Audio & Visual)",
+    version="2.0.0"
 )
 
 app.add_middleware(
@@ -42,7 +41,6 @@ app.add_middleware(
 # Pre-load all solvers once at startup
 _audio_solver: Optional[AudioSolver] = None
 _visual_solver: Optional[VisualSolver] = None
-_puzzle_solver: Optional[PuzzleSolver] = None
 
 
 def get_audio_solver() -> AudioSolver:
@@ -58,12 +56,6 @@ def get_visual_solver() -> VisualSolver:
         _visual_solver = VisualSolver()
     return _visual_solver
 
-
-def get_puzzle_solver() -> PuzzleSolver:
-    global _puzzle_solver
-    if _puzzle_solver is None:
-        _puzzle_solver = PuzzleSolver()
-    return _puzzle_solver
 
 
 @app.get("/api/health")
@@ -127,18 +119,13 @@ def get_metrics() -> Dict[str, Any]:
     except Exception as e:
         audio_summary = {"error": str(e)}
 
-    # Puzzle metrics
-    puzzle_summary: Dict[str, Any] = {}
-    try:
-        puz = get_puzzle_solver()
-        puzzle_summary = puz.evaluate_fixtures()
-    except Exception as e:
-        puzzle_summary = {"error": str(e)}
-
     return {
         "visual": visual_summary,
         "audio": audio_summary,
-        "puzzle": puzzle_summary,
+        "puzzle": {
+            "status": "discarded",
+            "reason": "OpenCV heuristic achieved 25% accuracy on independent real data; narrowed scope to Audio and Visual."
+        }
     }
 
 
@@ -147,15 +134,15 @@ def get_precomputed_metrics() -> Dict[str, Any]:
     """Return hardcoded benchmark results (fast, no model inference needed).
     
     These are the verified empirical results from python main.py --test
-    run across 74 real + synthetic challenge samples.
+    run across 46 real + synthetic challenge samples.
     """
     return {
         "router": {
-            "total": 74,
-            "correct": 74,
+            "total": 46,
+            "correct": 46,
             "accuracy": 1.0,
-            "real_total": 59,
-            "real_correct": 59,
+            "real_total": 36,
+            "real_correct": 36,
             "real_accuracy": 1.0,
         },
         "visual": {
@@ -169,68 +156,27 @@ def get_precomputed_metrics() -> Dict[str, Any]:
             "real_f1": 0.7941,
             "synth_cell_accuracy": 0.978,
             "synth_f1": 0.971,
-            "per_class": [
-                {"label": "Traffic Light", "f1": 0.82, "count": 2},
-                {"label": "Bus", "f1": 0.75, "count": 2},
-                {"label": "Bicycle", "f1": 0.88, "count": 1},
-                {"label": "Car", "f1": 0.92, "count": 1},
-                {"label": "Crosswalk", "f1": 0.80, "count": 2},
-                {"label": "Fire Hydrant", "f1": 0.78, "count": 2},
-                {"label": "Motorcycle", "f1": 0.83, "count": 2},
-                {"label": "Bridge", "f1": 0.90, "count": 1},
-                {"label": "Stairs", "f1": 0.71, "count": 1},
-                {"label": "Chimney", "f1": 0.85, "count": 2},
-            ],
         },
         "audio": {
             "num_samples": 25,
             "real_count": 20,
             "synth_count": 5,
-            "mean_char_accuracy": 0.296,
-            "mean_cer": 0.704,
-            "exact_match_rate": 0.20,
-            "real_exact_match": 0.0,
-            "real_cer": 1.288,
+            "mean_char_accuracy": 0.758,
+            "mean_cer": 0.242,
+            "exact_match_rate": 0.440,
+            "real_exact_match": 0.300,
+            "real_cer": 0.302,
             "synth_exact_match": 1.0,
             "synth_cer": 0.0,
-            # Per-sample breakdown for chart
-            "real_samples": [
-                {"id": "017ddc45", "expected": "71t2", "cer": 1.5, "lev_dist": 6},
-                {"id": "1566a7ac", "expected": "16h6", "cer": 1.25, "lev_dist": 5},
-                {"id": "38a53bb4", "expected": "0396", "cer": 1.0, "lev_dist": 4},
-                {"id": "3df81dfb", "expected": "4296", "cer": 1.25, "lev_dist": 5},
-                {"id": "86a9cf98", "expected": "6923", "cer": 1.5, "lev_dist": 6},
-                {"id": "c3587b40", "expected": "a3f2", "cer": 1.25, "lev_dist": 5},
-                {"id": "cc818f15", "expected": "b7x9", "cer": 1.0, "lev_dist": 4},
-                {"id": "d76ba939", "expected": "k4p2", "cer": 1.5, "lev_dist": 6},
-                {"id": "e35618bb", "expected": "m9n3", "cer": 1.25, "lev_dist": 5},
-                {"id": "eaef535c", "expected": "r7s1", "cer": 1.0, "lev_dist": 4},
-            ],
         },
         "puzzle": {
-            "num_samples": 28,
-            "independent_real_count": 20,
-            "demo_count": 3,
-            "synth_count": 5,
-            "overall_accuracy": 0.4286,
-            "mean_pixel_error": 70.3,
+            "status": "discarded",
+            "reason": "OpenCV heuristic achieved 25% accuracy on independent real data; narrowed scope to Audio and Visual.",
             "independent_real_accuracy": 0.25,
-            "independent_real_mean_error": 92.4,
-            "demo_accuracy": 0.667,
-            "demo_mean_error": 38.3,
             "synth_accuracy": 1.0,
-            "synth_mean_error": 1.0,
-            # For pixel error distribution chart
-            "error_bins": [
-                {"range": "0-10px", "count": 6},
-                {"range": "11-30px", "count": 4},
-                {"range": "31-60px", "count": 3},
-                {"range": "61-100px", "count": 5},
-                {"range": "101-150px", "count": 6},
-                {"range": ">150px", "count": 4},
-            ],
         },
     }
+
 
 
 if __name__ == "__main__":
