@@ -14,14 +14,12 @@ from solvers.base import CaptchaSolver, InvalidInputError
 from solvers.router import RouterModel, router
 from solvers.audio import AudioSolver
 from solvers.visual import VisualSolver
-from solvers.puzzle import PuzzleSolver
 
 
 # Registry of specialist solvers (initialized with lazy loading)
 SOLVERS: Dict[str, CaptchaSolver] = {
     "visual": VisualSolver(lazy_load=True),
     "audio": AudioSolver(lazy_load=True),
-    "puzzle": PuzzleSolver(),
 }
 
 
@@ -34,17 +32,17 @@ def route_and_solve(
     """Classify incoming CAPTCHA challenge and solve it using the matching specialist.
     
     Args:
-        input_path: Path to CAPTCHA challenge file (audio, image grid, or slider image).
+        input_path: Path to CAPTCHA challenge file (audio or visual image grid).
         prompt: Optional query object prompt for visual solver (defaults to 'traffic light').
         router_instance: Optional custom RouterModel instance.
         **kwargs: Modality-specific keyword arguments passed to specialist solvers.
         
     Returns:
         Standardized aggregated response:
-          - predicted_type: 'audio' | 'visual' | 'puzzle'
+          - predicted_type: 'audio' | 'visual'
           - router_confidence: float (0.0 to 1.0)
-          - specialist_used: name of the solver invoked
-          - answer: specialist solution (cell indices, transcribed string, or pixel offset)
+          - specialist_used: name of the solver invoked ('audio' or 'visual')
+          - answer: specialist solution (cell indices or transcribed string)
           - specialist_confidence: float (0.0 to 1.0)
           - details: specialist debug/visualization metadata
     """

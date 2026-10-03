@@ -47,9 +47,10 @@ class VisualSolver:
             return False
 
         try:
-            from transformers import CLIPModel, CLIPProcessor
+            from transformers import CLIPModel, CLIPProcessor, logging as hf_logging
+            hf_logging.set_verbosity_error()
             print(f"[VisualSolver] Loading CLIP model '{self.model_name}' on {self.device}...")
-            self.processor = CLIPProcessor.from_pretrained(self.model_name)
+            self.processor = CLIPProcessor.from_pretrained(self.model_name, use_fast=False)
             try:
                 self.model = CLIPModel.from_pretrained(self.model_name, use_safetensors=False).to(self.device)
             except Exception:
