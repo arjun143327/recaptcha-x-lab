@@ -115,18 +115,31 @@ def run_eval_benchmarks():
     audio_solver = AudioSolver()
 
     audio_summary = audio_solver.evaluate_fixtures()
-    real_aud = [r for r in audio_summary["sample_results"] if "real_" in r["file"]]
-    synth_aud = [r for r in audio_summary["sample_results"] if "real_" not in r["file"]]
+    clean_real_aud = [r for r in audio_summary["sample_results"] if r.get("split") == "test_split"]
+    heldout_aud = [r for r in audio_summary["sample_results"] if r.get("split") == "heldout_split"]
+    synth_aud = [r for r in audio_summary["sample_results"] if not r.get("is_real_audio")]
 
-    print(f"  Total Audio Files Tested: {audio_summary['num_samples']} (Real: {len(real_aud)}, Synthetic: {len(synth_aud)})")
-    print(f"  Mean Character Accuracy : {audio_summary['mean_character_accuracy'] * 100:.1f}%")
-    print(f"  Mean Character Error Rate: {audio_summary['mean_character_error_rate'] * 100:.1f}%")
-    print(f"  Exact Match Rate        : {audio_summary['exact_match_rate'] * 100:.1f}%")
-    if real_aud:
-        real_cer = sum(r.get("character_error_rate", r["levenshtein_distance"] / max(len(r["expected"]), len(r["predicted"]), 1)) for r in real_aud) / len(real_aud) * 100
-        real_exact = sum(1 for r in real_aud if r["exact_match"]) / len(real_aud) * 100
-        print(f"  --> Real SecurImage Subset: Exact Match: {real_exact:.1f}%, CER: {real_cer:.1f}%")
-        print(f"      (Reflects heavy synthetic acoustic distortion in SecurImage challenges)")
+    # Canonical evaluation set: 5 synthetic + 10 strictly held-out test_split (15 clean files total)
+    clean_eval_samples = synth_aud + clean_real_aud
+    clean_cer = sum(r["character_error_rate"] for r in clean_eval_samples) / len(clean_eval_samples) * 100 if clean_eval_samples else 0
+    clean_acc = sum(r["character_accuracy"] for r in clean_eval_samples) / len(clean_eval_samples) * 100 if clean_eval_samples else 0
+    clean_exact_cnt = sum(1 for r in clean_eval_samples if r["exact_match"])
+    clean_exact_pct = (clean_exact_cnt / len(clean_eval_samples)) * 100 if clean_eval_samples else 0
+
+    print(f"  Official Clean Test Files Tested: {len(clean_eval_samples)} (Real test_split: {len(clean_real_aud)}, Synthetic: {len(synth_aud)})")
+    print(f"  Mean Character Accuracy         : {clean_acc:.1f}%")
+    print(f"  Mean Character Error Rate (CER) : {clean_cer:.1f}%")
+    print(f"  Clean Exact Match Rate          : {clean_exact_cnt}/{len(clean_eval_samples)} ({clean_exact_pct:.1f}%)")
+    
+    if clean_real_aud:
+        real_cer = sum(r["character_error_rate"] for r in clean_real_aud) / len(clean_real_aud) * 100
+        real_exact_cnt = sum(1 for r in clean_real_aud if r["exact_match"])
+        real_exact_pct = (real_exact_cnt / len(clean_real_aud)) * 100
+        print(f"  --> Real SecurImage Held-Out Set: {real_exact_cnt}/{len(clean_real_aud)} ({real_exact_pct:.1f}%), CER: {real_cer:.1f}%")
+        print(f"      (Sole official real-world generalization metric; 0 train leakage)")
+    
+    if heldout_aud:
+        print(f"  --> [Excluded Split] heldout_split: {len(heldout_aud)} files excluded (train-adjacent, not a valid generalization metric)")
 
 
     print("\n================================================================================")

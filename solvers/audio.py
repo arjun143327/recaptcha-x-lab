@@ -19,7 +19,17 @@ import scipy.signal
 from solvers.base import CaptchaSolver, InvalidInputError, ModelLoadError
 
 
-DEFAULT_AUDIO_MODEL_NAME = "openai/whisper-base"
+BASE_PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+AUGMENTED_MODEL_DIR = os.path.join(BASE_PROJECT_DIR, "models", "audio", "whisper_augmented")
+FINETUNED_MODEL_DIR = os.path.join(BASE_PROJECT_DIR, "models", "audio", "whisper_finetuned")
+
+if os.path.exists(os.path.join(AUGMENTED_MODEL_DIR, "model.safetensors")):
+    DEFAULT_AUDIO_MODEL_NAME = AUGMENTED_MODEL_DIR
+elif os.path.exists(os.path.join(FINETUNED_MODEL_DIR, "model.safetensors")):
+    DEFAULT_AUDIO_MODEL_NAME = FINETUNED_MODEL_DIR
+else:
+    DEFAULT_AUDIO_MODEL_NAME = "openai/whisper-base"
+
 DEFAULT_WAV2VEC2_MODEL_NAME = "facebook/wav2vec2-base-960h"
 
 # Word-to-digit translation map for CAPTCHA challenges
@@ -98,7 +108,30 @@ def normalize_transcript_to_digits(text: str) -> str:
             digits.append(WORD_TO_DIGIT[clean_token])
         elif clean_token.isdigit() or clean_token.isalnum():
             digits.append(clean_token)
-    return "".join(digits)
+    raw_joined = "".join(digits)
+
+    # Collapse stuttered character repeats if length > 4 (e.g. '13uucc' -> '13uc', 'yx7pp' -> 'yx7p')
+    if len(raw_joined) > 4:
+        collapsed = []
+        has_repeat = False
+        for i, c in enumerate(raw_joined):
+            if i > 0 and c == raw_joined[i - 1]:
+                has_repeat = True
+                continue
+            collapsed.append(c)
+        if has_repeat:
+            cand = "".join(collapsed)
+            if len(cand) == 4:
+                return cand
+            elif len(cand) in (5, 6) and any(ch.isalpha() for ch in cand):
+                return cand[:4]
+            return cand
+        # For SecurImage challenges with 5-6 characters with letter repeats/hallucination,
+        # constrain to 4 characters. For arbitrary unconstrained speech (>6 chars),
+        # do NOT truncate silently: return full string so solver flags low confidence.
+        if any(c.isalpha() for c in raw_joined) and len(raw_joined) in (5, 6):
+            return raw_joined[:4]
+    return raw_joined
 
 
 def spectral_gate_noise_reduction(audio: np.ndarray, sr: int, threshold_factor: float = 1.8) -> np.ndarray:
@@ -121,6 +154,29 @@ def spectral_gate_noise_reduction(audio: np.ndarray, sr: int, threshold_factor: 
         if energies[idx] < thresh:
             gated[i:i + frame_len] *= 0.1
     return gated
+
+
+def evaluate_audio_captcha_format(clean_answer: str, base_confidence: float = 0.88) -> Tuple[float, Optional[str]]:
+    """Validate if decoded output matches expected ~4-character alphanumeric format.
+    
+    If output deviates (unconstrained speech, too long/short, or non-alphanumeric),
+    flag low confidence with an explicit diagnostic warning instead of silently forcing.
+    """
+    clean = clean_answer.strip()
+    if not clean:
+        return 0.10, "No intelligible alphanumeric characters detected in audio recording."
+    
+    is_standard_4char = (len(clean) == 4 and clean.isalnum())
+    is_spoken_digits = (len(clean) in (4, 5, 6) and clean.isdigit())
+
+    if is_standard_4char:
+        return base_confidence, None
+    elif is_spoken_digits:
+        return min(base_confidence, 0.85), None
+    elif len(clean) in (3, 5) and clean.isalnum():
+        return 0.60, f"Decoded transcript length ({len(clean)}) deviates slightly from standard 4-character format (SecurImage specification)."
+    else:
+        return 0.25, f"Decoded transcript '{clean}' ({len(clean)} chars) deviates from expected ~4-character alphanumeric format assumed by constrained decoder."
 
 
 class AudioSolver:
@@ -176,7 +232,26 @@ class AudioSolver:
     @staticmethod
     def preprocess_audio(file_path: str, target_sr: int = 16000, apply_gating: bool = True) -> Tuple[np.ndarray, int]:
         """Load, convert to mono, resample to 16kHz, and apply noise gating and bandpass filtering."""
-        sr, audio = wavfile.read(file_path)
+        if not os.path.exists(file_path):
+            raise InvalidInputError(f"Audio file not found: {file_path}")
+
+        try:
+            file_size = os.path.getsize(file_path)
+        except OSError as exc:
+            raise InvalidInputError(f"Cannot access audio file '{os.path.basename(file_path)}': {exc}") from exc
+
+        if file_size == 0:
+            raise InvalidInputError(f"Corrupted or empty audio file (0 bytes): '{os.path.basename(file_path)}'")
+
+        try:
+            sr, audio = wavfile.read(file_path)
+        except Exception as exc:
+            raise InvalidInputError(
+                f"Corrupted or unreadable audio file: '{os.path.basename(file_path)}' could not be decoded as standard WAV."
+            ) from exc
+
+        if len(audio) == 0:
+            raise InvalidInputError(f"Corrupted audio file: '{os.path.basename(file_path)}' contains 0 audio samples.")
         
         # Stereo to mono
         if audio.ndim > 1:
@@ -268,13 +343,22 @@ class AudioSolver:
                         return_tensors="pt"
                     ).input_features.to(self.device)
 
+                    gen_kwargs = {
+                        "language": "en",
+                        "task": "transcribe",
+                        "max_new_tokens": 14,
+                        "no_repeat_ngram_size": 2,
+                    }
+                    try:
+                        raw_prompt = self.processor.get_prompt_ids("4 characters code: A B C 1 2 3")
+                        gen_kwargs["prompt_ids"] = torch.from_numpy(raw_prompt).to(self.device)
+                    except Exception:
+                        pass
+
                     with torch.no_grad():
                         predicted_ids = self.model.generate(
                             input_features,
-                            language="en",
-                            task="transcribe",
-                            max_new_tokens=15,
-                            no_repeat_ngram_size=3
+                            **gen_kwargs
                         )
                         raw_transcript = self.processor.batch_decode(predicted_ids, skip_special_tokens=True)[0]
 
@@ -282,7 +366,8 @@ class AudioSolver:
                     clean_answer = normalize_transcript_to_digits(raw_transcript)
                     if not clean_answer:
                         clean_answer = re.sub(r"[^a-zA-Z0-9]", "", raw_transcript).lower()
-                    confidence = 0.88
+                    
+                    confidence, format_warning = evaluate_audio_captcha_format(clean_answer, base_confidence=0.88)
 
                     return {
                         "answer": clean_answer,
@@ -294,7 +379,9 @@ class AudioSolver:
                             "backend": self.backend,
                             "model": self.model_name,
                             "sample_rate": sr,
-                            "duration_sec": round(len(audio) / float(sr), 2)
+                            "duration_sec": round(len(audio) / float(sr), 2),
+                            "format_warning": format_warning,
+                            "format_matched": (format_warning is None)
                         }
                     }
                 else:
@@ -308,7 +395,7 @@ class AudioSolver:
                     with torch.no_grad():
                         logits = self.model(inputs).logits
                         probs = torch.softmax(logits, dim=-1)
-                        confidence = float(torch.max(probs, dim=-1).values.mean().cpu().item())
+                        ctc_conf = float(torch.max(probs, dim=-1).values.mean().cpu().item())
                         predicted_ids = torch.argmax(logits, dim=-1)
                         raw_transcript = self.processor.batch_decode(predicted_ids)[0]
 
@@ -316,9 +403,11 @@ class AudioSolver:
                     if not clean_answer:
                         clean_answer = re.sub(r"[^a-zA-Z0-9]", "", raw_transcript).lower()
 
+                    confidence, format_warning = evaluate_audio_captcha_format(clean_answer, base_confidence=round(ctc_conf, 4))
+
                     return {
                         "answer": clean_answer,
-                        "confidence": round(confidence, 4),
+                        "confidence": confidence,
                         "modality": "audio",
                         "details": {
                             "raw_transcript": raw_transcript,
@@ -326,14 +415,17 @@ class AudioSolver:
                             "backend": self.backend,
                             "model": self.model_name,
                             "sample_rate": sr,
-                            "duration_sec": round(len(audio) / float(sr), 2)
+                            "duration_sec": round(len(audio) / float(sr), 2),
+                            "format_warning": format_warning,
+                            "format_matched": (format_warning is None)
                         }
                     }
             except Exception as exc:
                 print(f"[AudioSolver] {self.backend} inference failed: {exc}, using acoustic fallback.")
 
         # Fallback acoustic decoder
-        raw_transcript, clean_answer, confidence = self._fallback_transcribe(audio, sr)
+        raw_transcript, clean_answer, base_conf = self._fallback_transcribe(audio, sr)
+        confidence, format_warning = evaluate_audio_captcha_format(clean_answer, base_confidence=base_conf)
         return {
             "answer": clean_answer,
             "confidence": confidence,
@@ -342,7 +434,9 @@ class AudioSolver:
                 "raw_transcript": raw_transcript,
                 "method": "acoustic_energy_burst_fallback",
                 "sample_rate": sr,
-                "duration_sec": round(len(audio) / float(sr), 2)
+                "duration_sec": round(len(audio) / float(sr), 2),
+                "format_warning": format_warning,
+                "format_matched": (format_warning is None)
             }
         }
 
@@ -384,7 +478,9 @@ class AudioSolver:
                 "levenshtein_distance": metrics["levenshtein_distance"],
                 "character_error_rate": metrics["character_error_rate"],
                 "character_accuracy": metrics["character_accuracy"],
-                "exact_match": bool(metrics["exact_match"])
+                "exact_match": bool(metrics["exact_match"]),
+                "split": meta.get("split", "synthetic") if isinstance(meta, dict) else "synthetic",
+                "is_real_audio": meta.get("is_real_audio", False) if isinstance(meta, dict) else False
             })
 
 

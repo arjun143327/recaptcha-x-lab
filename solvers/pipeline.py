@@ -1,9 +1,9 @@
-"""Pipeline and Result Aggregator wiring Router to all 3 specialist models.
+"""Pipeline and Result Aggregator wiring Router to Audio and Visual specialist models.
 
 Defined in ARCHITECTURE.md:
   1. Input CAPTCHA
-  2. Router Model (modality classifier)
-  3. Dispatches to matching specialist (Visual, Audio, or Puzzle)
+  2. Router Model (binary modality classifier: audio vs visual)
+  3. Dispatches to matching specialist (Visual or Audio)
   4. Aggregates and returns standardized result dictionary
 """
 
@@ -16,11 +16,23 @@ from solvers.audio import AudioSolver
 from solvers.visual import VisualSolver
 
 
-# Registry of specialist solvers (initialized with lazy loading)
+# Registry of specialist solvers (initialized as persistent singletons)
 SOLVERS: Dict[str, CaptchaSolver] = {
     "visual": VisualSolver(lazy_load=True),
     "audio": AudioSolver(lazy_load=True),
 }
+
+
+def preload_models() -> Dict[str, bool]:
+    """Load model weights for all registered specialist solvers ONCE at application startup.
+    
+    Ensures zero cold-start delay during interactive evaluation and prevents reloading per-request.
+    """
+    statuses = {}
+    for name, solver in SOLVERS.items():
+        if hasattr(solver, "_ensure_model_loaded"):
+            statuses[name] = solver._ensure_model_loaded()
+    return statuses
 
 
 def route_and_solve(

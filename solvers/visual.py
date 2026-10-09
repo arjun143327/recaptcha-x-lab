@@ -178,12 +178,24 @@ class VisualSolver:
         if not os.path.exists(input_path):
             raise InvalidInputError(f"Visual challenge file not found: {input_path}")
 
-        target_prompt = prompt or DEFAULT_PROMPT
+        target_prompt = prompt.strip() if (prompt and prompt.strip()) else DEFAULT_PROMPT
 
         try:
             image = Image.open(input_path).convert("RGB")
         except Exception as exc:
-            raise InvalidInputError(f"Could not open image file: {input_path}") from exc
+            raise InvalidInputError(f"Corrupted or unreadable image file: '{os.path.basename(input_path)}'") from exc
+
+        # Input validation: verify 3x3 grid structural assumptions (aspect ratio and size)
+        w, h = image.size
+        if w < 100 or h < 100:
+            raise InvalidInputError(
+                f"Unsupported image format: Image dimensions ({w}x{h} px) are too small to be a valid 3x3 reCAPTCHA grid (minimum 100x100 px required)."
+            )
+        aspect_ratio = w / float(h)
+        if aspect_ratio < 0.75 or aspect_ratio > 1.33:
+            raise InvalidInputError(
+                f"Unsupported image format: Visual solver requires a 3x3 challenge grid with ~1:1 aspect ratio, but received {w}x{h} px (aspect ratio {aspect_ratio:.2f})."
+            )
 
         # Attempt Hugging Face CLIP inference
         clip_loaded = self._ensure_model_loaded()
