@@ -266,7 +266,11 @@ def download_real_visual_fixtures():
         {"id": "09", "prompt": "stairs", "target_cat": "Stairs", "targets": [3, 6, 7], "distractors": ["Other", "Palm", "Mountain"]},
         {"id": "10", "prompt": "chimney", "target_cat": "Chimney", "targets": [0, 1, 4], "distractors": ["Other", "Mountain"]},
         {"id": "11", "prompt": "traffic light", "target_cat": "Traffic Light", "targets": [2, 4, 6, 7], "distractors": ["Other", "Palm"]},
-        {"id": "12", "prompt": "bus", "target_cat": "Bus", "targets": [0, 3, 5, 8], "distractors": ["Other", "Mountain"]}
+        {"id": "12", "prompt": "bus", "target_cat": "Bus", "targets": [0, 3, 5, 8], "distractors": ["Other", "Mountain"]},
+        {"id": "13", "prompt": "crosswalk", "target_cat": "Crosswalk", "targets": [1, 4, 7], "distractors": ["Mountain", "Other"]},
+        {"id": "14", "prompt": "motorcycle", "target_cat": "Motorcycle", "targets": [2, 5, 8], "distractors": ["Mountain", "Stairs", "Other"]},
+        {"id": "15", "prompt": "traffic light", "target_cat": "Traffic Light", "targets": [0, 3, 6], "distractors": ["Other", "Palm", "Mountain"]},
+        {"id": "16", "prompt": "car", "target_cat": "Car", "targets": [1, 3, 5, 7], "distractors": ["Other", "Mountain"]}
     ]
 
     needed_challenges = [c for c in challenge_specs if not os.path.exists(os.path.join(VISUAL_DIR, f"real_recaptcha_eth_{c['id']}_{c['prompt'].replace(' ', '_')}.jpg"))]

@@ -422,44 +422,69 @@ def annotate_visual_grid(image_path: str, matched_cells: List[int]) -> Image.Ima
 
 
 BUNDLED_SAMPLES = {
-    # Real reCAPTCHA Grids
-    "Real reCAPTCHA: Chimneys (400x400)": {
+    # 10 Real reCAPTCHA Visual Grids (10 distinct categories, zero synthetic)
+    "Real reCAPTCHA: Chimney (3x3 Grid)": {
         "path": "data/visual/real_recaptcha_chimney.jpg",
         "prompt": "chimney",
         "type": "visual",
         "category": "Visual Challenges"
     },
-    "Real reCAPTCHA: Fire Hydrant (400x400)": {
+    "Real reCAPTCHA: Fire Hydrant (3x3 Grid)": {
         "path": "data/visual/real_recaptcha_hydrant.jpg",
         "prompt": "fire hydrant",
         "type": "visual",
         "category": "Visual Challenges"
     },
-    "Real reCAPTCHA: Motorcycle (400x400)": {
-        "path": "data/visual/real_recaptcha_motorcycle.jpg",
-        "prompt": "motorcycle",
-        "type": "visual",
-        "category": "Visual Challenges"
-    },
-    "Real reCAPTCHA: Crosswalk (400x400)": {
+    "Real reCAPTCHA: Crosswalk (3x3 Grid)": {
         "path": "data/visual/real_recaptcha_crosswalk.jpg",
         "prompt": "crosswalk",
         "type": "visual",
         "category": "Visual Challenges"
     },
-    "Real reCAPTCHA: Traffic Light (400x400)": {
-        "path": "data/visual/real_recaptcha_trafficlight.jpg",
+    "Real reCAPTCHA: Motorcycle (3x3 Grid)": {
+        "path": "data/visual/real_recaptcha_eth_07_motorcycle.jpg",
+        "prompt": "motorcycle",
+        "type": "visual",
+        "category": "Visual Challenges"
+    },
+    "Real reCAPTCHA: Traffic Light (3x3 Grid)": {
+        "path": "data/visual/real_recaptcha_eth_01_traffic_light.jpg",
         "prompt": "traffic light",
         "type": "visual",
         "category": "Visual Challenges"
     },
-    "Synthetic Grid: Traffic Light (300x300)": {
-        "path": "data/visual/visual_grid_01.png",
-        "prompt": "traffic light",
+    "Real reCAPTCHA: Bus (3x3 Grid)": {
+        "path": "data/visual/real_recaptcha_eth_02_bus.jpg",
+        "prompt": "bus",
         "type": "visual",
         "category": "Visual Challenges"
     },
-    # Real SecurImage Audio Challenges
+    "Real reCAPTCHA: Bicycle (3x3 Grid)": {
+        "path": "data/visual/real_recaptcha_eth_03_bicycle.jpg",
+        "prompt": "bicycle",
+        "type": "visual",
+        "category": "Visual Challenges"
+    },
+    "Real reCAPTCHA: Car (3x3 Grid)": {
+        "path": "data/visual/real_recaptcha_eth_04_car.jpg",
+        "prompt": "car",
+        "type": "visual",
+        "category": "Visual Challenges"
+    },
+    "Real reCAPTCHA: Bridge (3x3 Grid)": {
+        "path": "data/visual/real_recaptcha_eth_08_bridge.jpg",
+        "prompt": "bridge",
+        "type": "visual",
+        "category": "Visual Challenges"
+    },
+    "Real reCAPTCHA: Stairs (3x3 Grid)": {
+        "path": "data/visual/real_recaptcha_eth_09_stairs.jpg",
+        "prompt": "stairs",
+        "type": "visual",
+        "category": "Visual Challenges"
+    },
+
+    # 10 Real SecurImage Audio Challenges (Test split, zero synthetic)
     "Real SecurImage: 71t2 (WAV)": {
         "path": "data/audio/real_audio_017ddc45.wav",
         "prompt": None,
@@ -490,30 +515,35 @@ BUNDLED_SAMPLES = {
         "type": "audio",
         "category": "Audio Challenges"
     },
-    "Synthetic Spoken Digits: 72941 (WAV)": {
-        "path": "data/audio/audio_sample_01.wav",
+    "Real SecurImage: u38m (WAV)": {
+        "path": "data/audio/real_audio_c3587b40.wav",
         "prompt": None,
         "type": "audio",
         "category": "Audio Challenges"
     },
-    # Malformed & Deliberate Failure Tests
-    "⚠️ Malformed Test: Non-3x3 Banner Image (500x120)": {
-        "path": "data/demo_tests/malformed_banner_non_grid.png",
-        "prompt": "traffic light",
-        "type": "malformed",
-        "category": "Input Validation & Failure Tests"
-    },
-    "⚠️ Malformed Test: Unsupported .txt Document": {
-        "path": "data/demo_tests/malformed_unsupported_format.txt",
+    "Real SecurImage: twag (WAV)": {
+        "path": "data/audio/real_audio_cc818f15.wav",
         "prompt": None,
-        "type": "malformed",
-        "category": "Input Validation & Failure Tests"
+        "type": "audio",
+        "category": "Audio Challenges"
     },
-    "⚠️ Malformed Test: Empty 0-Byte Corrupt WAV": {
-        "path": "data/demo_tests/malformed_corrupt_empty.wav",
+    "Real SecurImage: 4hh6 (WAV)": {
+        "path": "data/audio/real_audio_d76ba939.wav",
         "prompt": None,
-        "type": "malformed",
-        "category": "Input Validation & Failure Tests"
+        "type": "audio",
+        "category": "Audio Challenges"
+    },
+    "Real SecurImage: 4s4z (WAV)": {
+        "path": "data/audio/real_audio_e35618bb.wav",
+        "prompt": None,
+        "type": "audio",
+        "category": "Audio Challenges"
+    },
+    "Real SecurImage: 5ohb (WAV)": {
+        "path": "data/audio/real_audio_eaef535c.wav",
+        "prompt": None,
+        "type": "audio",
+        "category": "Audio Challenges"
     },
 }
 
@@ -603,7 +633,7 @@ with tab_demo:
                 elif ext in [".wav", ".mp3", ".ogg", ".flac"]:
                     st.audio(selected_file_path)
 
-        submit_btn = st.button("🚀 Route & Solve Challenge", type="primary", use_container_width=True)
+        submit_btn = st.button("🚀 Route & Solve Challenge", type="primary", width="stretch")
 
     # -------------------------------------------------------------------------
     # Execution & Result Presentation
@@ -676,7 +706,7 @@ with tab_demo:
                         st.image(
                             annotated_img,
                             caption=f"Challenge Grid with Highlighted Cells for Prompt: '{target_prompt}'",
-                            use_container_width=True
+                            width="stretch"
                         )
 
                     else:

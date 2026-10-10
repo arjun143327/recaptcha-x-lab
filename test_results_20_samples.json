@@ -1,0 +1,714 @@
+{
+  "timestamp": "2026-10-10 16:45:05",
+  "visual_summary": {
+    "total_samples": 20,
+    "router_accuracy": "20/20 (100.0%)",
+    "exact_grid_matches": "11/20 (55.0%)",
+    "cell_accuracy": "153/180 (85.0%)"
+  },
+  "visual_results": [
+    {
+      "index": 1,
+      "filename": "real_recaptcha_chimney.jpg",
+      "prompt": "chimney",
+      "ground_truth": [
+        1,
+        5,
+        8
+      ],
+      "predicted": [
+        1,
+        5,
+        8
+      ],
+      "exact_match": true,
+      "cell_accuracy": "9/9 (100.0%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.99,
+      "latency_sec": 0.59
+    },
+    {
+      "index": 2,
+      "filename": "real_recaptcha_crosswalk.jpg",
+      "prompt": "crosswalk",
+      "ground_truth": [
+        3,
+        7
+      ],
+      "predicted": [
+        3,
+        7
+      ],
+      "exact_match": true,
+      "cell_accuracy": "9/9 (100.0%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.97,
+      "latency_sec": 0.29
+    },
+    {
+      "index": 3,
+      "filename": "real_recaptcha_eth_01_traffic_light.jpg",
+      "prompt": "traffic light",
+      "ground_truth": [
+        0,
+        4,
+        7
+      ],
+      "predicted": [
+        0,
+        4,
+        7
+      ],
+      "exact_match": true,
+      "cell_accuracy": "9/9 (100.0%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.99,
+      "latency_sec": 0.3
+    },
+    {
+      "index": 4,
+      "filename": "real_recaptcha_eth_02_bus.jpg",
+      "prompt": "bus",
+      "ground_truth": [
+        1,
+        2,
+        5
+      ],
+      "predicted": [
+        1,
+        2,
+        5
+      ],
+      "exact_match": true,
+      "cell_accuracy": "9/9 (100.0%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.99,
+      "latency_sec": 0.3
+    },
+    {
+      "index": 5,
+      "filename": "real_recaptcha_eth_03_bicycle.jpg",
+      "prompt": "bicycle",
+      "ground_truth": [
+        3,
+        4,
+        6
+      ],
+      "predicted": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "exact_match": false,
+      "cell_accuracy": "4/9 (44.4%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.9,
+      "latency_sec": 0.29
+    },
+    {
+      "index": 6,
+      "filename": "real_recaptcha_eth_04_car.jpg",
+      "prompt": "car",
+      "ground_truth": [
+        0,
+        2,
+        6,
+        8
+      ],
+      "predicted": [
+        0,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "exact_match": false,
+      "cell_accuracy": "6/9 (66.7%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.89,
+      "latency_sec": 0.29
+    },
+    {
+      "index": 7,
+      "filename": "real_recaptcha_eth_05_crosswalk.jpg",
+      "prompt": "crosswalk",
+      "ground_truth": [
+        2,
+        5,
+        7
+      ],
+      "predicted": [
+        2,
+        8
+      ],
+      "exact_match": false,
+      "cell_accuracy": "6/9 (66.7%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.99,
+      "latency_sec": 0.28
+    },
+    {
+      "index": 8,
+      "filename": "real_recaptcha_eth_06_fire_hydrant.jpg",
+      "prompt": "fire hydrant",
+      "ground_truth": [
+        1,
+        4,
+        8
+      ],
+      "predicted": [
+        1,
+        4,
+        8
+      ],
+      "exact_match": true,
+      "cell_accuracy": "9/9 (100.0%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.99,
+      "latency_sec": 0.29
+    },
+    {
+      "index": 9,
+      "filename": "real_recaptcha_eth_07_motorcycle.jpg",
+      "prompt": "motorcycle",
+      "ground_truth": [
+        0,
+        3,
+        7
+      ],
+      "predicted": [
+        0,
+        3,
+        7
+      ],
+      "exact_match": true,
+      "cell_accuracy": "9/9 (100.0%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.99,
+      "latency_sec": 0.28
+    },
+    {
+      "index": 10,
+      "filename": "real_recaptcha_eth_08_bridge.jpg",
+      "prompt": "bridge",
+      "ground_truth": [
+        1,
+        4,
+        5,
+        8
+      ],
+      "predicted": [
+        0,
+        1,
+        4,
+        5,
+        7,
+        8
+      ],
+      "exact_match": false,
+      "cell_accuracy": "7/9 (77.8%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.9,
+      "latency_sec": 0.3
+    },
+    {
+      "index": 11,
+      "filename": "real_recaptcha_eth_09_stairs.jpg",
+      "prompt": "stairs",
+      "ground_truth": [
+        3,
+        6,
+        7
+      ],
+      "predicted": [
+        7
+      ],
+      "exact_match": false,
+      "cell_accuracy": "7/9 (77.8%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.99,
+      "latency_sec": 0.29
+    },
+    {
+      "index": 12,
+      "filename": "real_recaptcha_eth_10_chimney.jpg",
+      "prompt": "chimney",
+      "ground_truth": [
+        0,
+        1,
+        4
+      ],
+      "predicted": [
+        1,
+        7
+      ],
+      "exact_match": false,
+      "cell_accuracy": "6/9 (66.7%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.99,
+      "latency_sec": 0.35
+    },
+    {
+      "index": 13,
+      "filename": "real_recaptcha_eth_11_traffic_light.jpg",
+      "prompt": "traffic light",
+      "ground_truth": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "predicted": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "exact_match": true,
+      "cell_accuracy": "9/9 (100.0%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.99,
+      "latency_sec": 0.35
+    },
+    {
+      "index": 14,
+      "filename": "real_recaptcha_eth_12_bus.jpg",
+      "prompt": "bus",
+      "ground_truth": [
+        0,
+        3,
+        5,
+        8
+      ],
+      "predicted": [
+        0,
+        3,
+        5,
+        8
+      ],
+      "exact_match": true,
+      "cell_accuracy": "9/9 (100.0%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.99,
+      "latency_sec": 0.31
+    },
+    {
+      "index": 15,
+      "filename": "real_recaptcha_eth_13_crosswalk.jpg",
+      "prompt": "crosswalk",
+      "ground_truth": [
+        1,
+        4,
+        7
+      ],
+      "predicted": [
+        1
+      ],
+      "exact_match": false,
+      "cell_accuracy": "7/9 (77.8%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.99,
+      "latency_sec": 0.29
+    },
+    {
+      "index": 16,
+      "filename": "real_recaptcha_eth_14_motorcycle.jpg",
+      "prompt": "motorcycle",
+      "ground_truth": [
+        2,
+        5,
+        8
+      ],
+      "predicted": [
+        2,
+        5,
+        8
+      ],
+      "exact_match": true,
+      "cell_accuracy": "9/9 (100.0%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.99,
+      "latency_sec": 0.29
+    },
+    {
+      "index": 17,
+      "filename": "real_recaptcha_eth_15_traffic_light.jpg",
+      "prompt": "traffic light",
+      "ground_truth": [
+        0,
+        3,
+        6
+      ],
+      "predicted": [
+        0,
+        3,
+        6
+      ],
+      "exact_match": true,
+      "cell_accuracy": "9/9 (100.0%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.99,
+      "latency_sec": 0.28
+    },
+    {
+      "index": 18,
+      "filename": "real_recaptcha_eth_16_car.jpg",
+      "prompt": "car",
+      "ground_truth": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "predicted": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "exact_match": false,
+      "cell_accuracy": "6/9 (66.7%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.87,
+      "latency_sec": 0.29
+    },
+    {
+      "index": 19,
+      "filename": "real_recaptcha_hydrant.jpg",
+      "prompt": "fire hydrant",
+      "ground_truth": [
+        4,
+        5,
+        8
+      ],
+      "predicted": [
+        4,
+        5,
+        8
+      ],
+      "exact_match": true,
+      "cell_accuracy": "9/9 (100.0%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.99,
+      "latency_sec": 0.28
+    },
+    {
+      "index": 20,
+      "filename": "real_recaptcha_motorbike.jpg",
+      "prompt": "motorcycle",
+      "ground_truth": [
+        1,
+        2,
+        4,
+        7,
+        8
+      ],
+      "predicted": [
+        4
+      ],
+      "exact_match": false,
+      "cell_accuracy": "5/9 (55.6%)",
+      "router_type": "visual",
+      "router_conf": 0.99,
+      "specialist_conf": 0.99,
+      "latency_sec": 0.26
+    }
+  ],
+  "audio_summary": {
+    "total_samples": 20,
+    "router_accuracy": "20/20 (100.0%)",
+    "exact_word_matches": "16/20 (80.0%)",
+    "character_accuracy": "76/80 (95.0%)"
+  },
+  "audio_results": [
+    {
+      "index": 1,
+      "filename": "real_audio_017ddc45.wav",
+      "split": "test_split",
+      "ground_truth": "71t2",
+      "predicted": "71t2",
+      "exact_match": true,
+      "char_match": "4/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.78
+    },
+    {
+      "index": 2,
+      "filename": "real_audio_0859b1e7.wav",
+      "split": "heldout_split",
+      "ground_truth": "viz3",
+      "predicted": "viz3",
+      "exact_match": true,
+      "char_match": "4/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.46
+    },
+    {
+      "index": 3,
+      "filename": "real_audio_10f357c0.wav",
+      "split": "heldout_split",
+      "ground_truth": "m89l",
+      "predicted": "m89l",
+      "exact_match": true,
+      "char_match": "4/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.46
+    },
+    {
+      "index": 4,
+      "filename": "real_audio_12155ce1.wav",
+      "split": "heldout_split",
+      "ground_truth": "sx4k",
+      "predicted": "sx4k",
+      "exact_match": true,
+      "char_match": "4/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.43
+    },
+    {
+      "index": 5,
+      "filename": "real_audio_12c06bdd.wav",
+      "split": "heldout_split",
+      "ground_truth": "2pvi",
+      "predicted": "2pvi",
+      "exact_match": true,
+      "char_match": "4/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.44
+    },
+    {
+      "index": 6,
+      "filename": "real_audio_1566a7ac.wav",
+      "split": "test_split",
+      "ground_truth": "1zt5",
+      "predicted": "1zt5",
+      "exact_match": true,
+      "char_match": "4/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.45
+    },
+    {
+      "index": 7,
+      "filename": "real_audio_241742cf.wav",
+      "split": "heldout_split",
+      "ground_truth": "5sod",
+      "predicted": "5sod",
+      "exact_match": true,
+      "char_match": "4/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.46
+    },
+    {
+      "index": 8,
+      "filename": "real_audio_2498fbc9.wav",
+      "split": "heldout_split",
+      "ground_truth": "f4d1",
+      "predicted": "x4d1",
+      "exact_match": false,
+      "char_match": "3/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.43
+    },
+    {
+      "index": 9,
+      "filename": "real_audio_2cae3e9e.wav",
+      "split": "heldout_split",
+      "ground_truth": "k7bg",
+      "predicted": "k7dg",
+      "exact_match": false,
+      "char_match": "3/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.44
+    },
+    {
+      "index": 10,
+      "filename": "real_audio_31eb14bb.wav",
+      "split": "heldout_split",
+      "ground_truth": "kano",
+      "predicted": "kano",
+      "exact_match": true,
+      "char_match": "4/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.43
+    },
+    {
+      "index": 11,
+      "filename": "real_audio_320c0998.wav",
+      "split": "heldout_split",
+      "ground_truth": "hs84",
+      "predicted": "hs84",
+      "exact_match": true,
+      "char_match": "4/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.43
+    },
+    {
+      "index": 12,
+      "filename": "real_audio_337fb2e8.wav",
+      "split": "heldout_split",
+      "ground_truth": "7syd",
+      "predicted": "7syd",
+      "exact_match": true,
+      "char_match": "4/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.44
+    },
+    {
+      "index": 13,
+      "filename": "real_audio_38a53bb4.wav",
+      "split": "test_split",
+      "ground_truth": "vtu6",
+      "predicted": "vtu6",
+      "exact_match": true,
+      "char_match": "4/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.41
+    },
+    {
+      "index": 14,
+      "filename": "real_audio_3df81dfb.wav",
+      "split": "test_split",
+      "ground_truth": "yx7p",
+      "predicted": "yx7p",
+      "exact_match": true,
+      "char_match": "4/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.44
+    },
+    {
+      "index": 15,
+      "filename": "real_audio_86a9cf98.wav",
+      "split": "test_split",
+      "ground_truth": "13uc",
+      "predicted": "13uc",
+      "exact_match": true,
+      "char_match": "4/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.47
+    },
+    {
+      "index": 16,
+      "filename": "real_audio_c3587b40.wav",
+      "split": "test_split",
+      "ground_truth": "u38m",
+      "predicted": "u38m",
+      "exact_match": true,
+      "char_match": "4/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.43
+    },
+    {
+      "index": 17,
+      "filename": "real_audio_cc818f15.wav",
+      "split": "test_split",
+      "ground_truth": "twag",
+      "predicted": "twag",
+      "exact_match": true,
+      "char_match": "4/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.49
+    },
+    {
+      "index": 18,
+      "filename": "real_audio_d76ba939.wav",
+      "split": "test_split",
+      "ground_truth": "4hh6",
+      "predicted": "4hh6",
+      "exact_match": true,
+      "char_match": "4/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.4
+    },
+    {
+      "index": 19,
+      "filename": "real_audio_e35618bb.wav",
+      "split": "test_split",
+      "ground_truth": "4s4z",
+      "predicted": "4s4v",
+      "exact_match": false,
+      "char_match": "3/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.44
+    },
+    {
+      "index": 20,
+      "filename": "real_audio_eaef535c.wav",
+      "split": "test_split",
+      "ground_truth": "5ohb",
+      "predicted": "54hb",
+      "exact_match": false,
+      "char_match": "3/4",
+      "router_type": "audio",
+      "router_conf": 0.99,
+      "specialist_conf": 0.88,
+      "latency_sec": 0.46
+    }
+  ]
+}

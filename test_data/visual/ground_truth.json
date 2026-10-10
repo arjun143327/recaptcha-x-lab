@@ -1,0 +1,117 @@
+{
+  "real_recaptcha_motorbike.jpg": {
+    "source": "LudwigStumpp/zero-shot-captcha-solver",
+    "prompt": "motorcycle",
+    "target_cells": [
+      1,
+      2,
+      4,
+      7,
+      8
+    ],
+    "is_real_recaptcha": true,
+    "description": "Real 3x3 reCAPTCHA grid containing motorcycle"
+  },
+  "real_recaptcha_eth_05_crosswalk.jpg": {
+    "source": "aplesner-eth/reCAPTCHAv2 (ETH Zurich benchmark tiles)",
+    "prompt": "crosswalk",
+    "target_cells": [
+      2,
+      5,
+      7
+    ],
+    "is_real_recaptcha": true,
+    "description": "Real 3x3 reCAPTCHA grid assembled from ETH Zurich dataset for prompt 'crosswalk'"
+  },
+  "real_recaptcha_eth_06_fire_hydrant.jpg": {
+    "source": "aplesner-eth/reCAPTCHAv2 (ETH Zurich benchmark tiles)",
+    "prompt": "fire hydrant",
+    "target_cells": [
+      1,
+      4,
+      8
+    ],
+    "is_real_recaptcha": true,
+    "description": "Real 3x3 reCAPTCHA grid assembled from ETH Zurich dataset for prompt 'fire hydrant'"
+  },
+  "real_recaptcha_eth_10_chimney.jpg": {
+    "source": "aplesner-eth/reCAPTCHAv2 (ETH Zurich benchmark tiles)",
+    "prompt": "chimney",
+    "target_cells": [
+      0,
+      1,
+      4
+    ],
+    "is_real_recaptcha": true,
+    "description": "Real 3x3 reCAPTCHA grid assembled from ETH Zurich dataset for prompt 'chimney'"
+  },
+  "real_recaptcha_eth_11_traffic_light.jpg": {
+    "source": "aplesner-eth/reCAPTCHAv2 (ETH Zurich benchmark tiles)",
+    "prompt": "traffic light",
+    "target_cells": [
+      2,
+      4,
+      6,
+      7
+    ],
+    "is_real_recaptcha": true,
+    "description": "Real 3x3 reCAPTCHA grid assembled from ETH Zurich dataset for prompt 'traffic light'"
+  },
+  "real_recaptcha_eth_12_bus.jpg": {
+    "source": "aplesner-eth/reCAPTCHAv2 (ETH Zurich benchmark tiles)",
+    "prompt": "bus",
+    "target_cells": [
+      0,
+      3,
+      5,
+      8
+    ],
+    "is_real_recaptcha": true,
+    "description": "Real 3x3 reCAPTCHA grid assembled from ETH Zurich dataset for prompt 'bus'"
+  },
+  "real_recaptcha_eth_13_crosswalk.jpg": {
+    "source": "aplesner-eth/reCAPTCHAv2 (ETH Zurich benchmark tiles)",
+    "prompt": "crosswalk",
+    "target_cells": [
+      1,
+      4,
+      7
+    ],
+    "is_real_recaptcha": true,
+    "description": "Real 3x3 reCAPTCHA grid assembled from ETH Zurich dataset for prompt 'crosswalk'"
+  },
+  "real_recaptcha_eth_14_motorcycle.jpg": {
+    "source": "aplesner-eth/reCAPTCHAv2 (ETH Zurich benchmark tiles)",
+    "prompt": "motorcycle",
+    "target_cells": [
+      2,
+      5,
+      8
+    ],
+    "is_real_recaptcha": true,
+    "description": "Real 3x3 reCAPTCHA grid assembled from ETH Zurich dataset for prompt 'motorcycle'"
+  },
+  "real_recaptcha_eth_15_traffic_light.jpg": {
+    "source": "aplesner-eth/reCAPTCHAv2 (ETH Zurich benchmark tiles)",
+    "prompt": "traffic light",
+    "target_cells": [
+      0,
+      3,
+      6
+    ],
+    "is_real_recaptcha": true,
+    "description": "Real 3x3 reCAPTCHA grid assembled from ETH Zurich dataset for prompt 'traffic light'"
+  },
+  "real_recaptcha_eth_16_car.jpg": {
+    "source": "aplesner-eth/reCAPTCHAv2 (ETH Zurich benchmark tiles)",
+    "prompt": "car",
+    "target_cells": [
+      1,
+      3,
+      5,
+      7
+    ],
+    "is_real_recaptcha": true,
+    "description": "Real 3x3 reCAPTCHA grid assembled from ETH Zurich dataset for prompt 'car'"
+  }
+}
