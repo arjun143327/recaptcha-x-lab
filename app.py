@@ -101,24 +101,33 @@ CUSTOM_CSS = """
         box-shadow: 0 3px 10px rgba(13, 27, 42, 0.08) !important;
     }
 
-    /* Primary Action Button (Minimal Dark Accent #1B263B) */
+    /* Primary Action Button (Minimal Dark Accent #1B263B with Crisp White Text) */
     button[kind="primary"],
-    .stButton > button {
+    .stButton > button,
+    div[data-testid="stButton"] button {
         background-color: #1B263B !important;
-        color: #F4F1DE !important;
+        color: #FFFFFF !important;
         border: none !important;
         border-radius: 8px !important;
         font-weight: 700 !important;
-        font-size: 1.05rem !important;
+        font-size: 1.08rem !important;
         padding: 12px 24px !important;
-        box-shadow: 0 3px 12px rgba(13, 27, 42, 0.15) !important;
+        box-shadow: 0 4px 14px rgba(13, 27, 42, 0.2) !important;
         transition: all 0.2s ease !important;
     }
+    button[kind="primary"] *,
+    .stButton > button *,
+    div[data-testid="stButton"] button * {
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+    }
     button[kind="primary"]:hover,
-    .stButton > button:hover {
+    .stButton > button:hover,
+    div[data-testid="stButton"] button:hover {
         background-color: #0D1B2A !important;
+        color: #FFFFFF !important;
         transform: translateY(-1px) !important;
-        box-shadow: 0 6px 16px rgba(13, 27, 42, 0.22) !important;
+        box-shadow: 0 6px 18px rgba(13, 27, 42, 0.3) !important;
     }
 
     /* Metric & Status Badges (Holst Accents) */
