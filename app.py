@@ -36,7 +36,6 @@ from solvers.base import InvalidInputError
 # -----------------------------------------------------------------------------
 st.set_page_config(
     page_title="reCAPTCHA-X-LAB — Multi-Modal Solver Demo",
-    page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -413,7 +412,7 @@ st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 # -----------------------------------------------------------------------------
 # 2. One-Time Model Initialization (@st.cache_resource)
 # -----------------------------------------------------------------------------
-@st.cache_resource(show_spinner="⏳ Initializing specialist deep learning models once at startup...")
+@st.cache_resource(show_spinner="Initializing specialist deep learning models once at startup...")
 def initialize_models():
     """Load model weights for Visual (CLIP) and Audio (Whisper) once and keep cached."""
     statuses = preload_models()
@@ -596,7 +595,7 @@ BUNDLED_SAMPLES = {
 # -----------------------------------------------------------------------------
 # 4. Header & Navigation
 # -----------------------------------------------------------------------------
-st.title("🛡️ reCAPTCHA-X-LAB — Multi-Modal Solver")
+st.title("reCAPTCHA-X-LAB — Multi-Modal Solver")
 st.markdown(
     "<p style='font-size: 1.15rem; color: #415A77; margin-bottom: 24px; font-weight: 500;'>"
     "Production-grade neural solver pipeline combining an <b>Audio Specialist</b> (Fine-Tuned Whisper-base + Noise Gating), "
@@ -606,9 +605,9 @@ st.markdown(
 )
 
 tab_demo, tab_benchmarks, tab_arch = st.tabs([
-    "🚀 Interactive Solver Demo",
-    "📊 Official Benchmarks & Methodology",
-    "🏗️ Pipeline Architecture"
+    "Interactive Solver Demo",
+    "Official Benchmarks & Methodology",
+    "Pipeline Architecture"
 ])
 
 
@@ -623,14 +622,14 @@ with tab_demo:
 
         input_mode = st.radio(
             "Input Mode:",
-            ["📁 Bundled Demo Samples (Curated)", "📤 Upload Custom Challenge File"],
+            ["Bundled Demo Samples (Curated)", "Upload Custom Challenge File"],
             horizontal=True
         )
 
         selected_file_path: Optional[str] = None
         target_prompt: str = "traffic light"
 
-        if input_mode == "📁 Bundled Demo Samples (Curated)":
+        if input_mode == "Bundled Demo Samples (Curated)":
             sample_keys = list(BUNDLED_SAMPLES.keys())
             sample_choice = st.selectbox("Choose a real benchmark test sample:", sample_keys, index=0)
             meta = BUNDLED_SAMPLES[sample_choice]
@@ -675,7 +674,7 @@ with tab_demo:
                 elif ext in [".wav", ".mp3", ".ogg", ".flac"]:
                     st.audio(selected_file_path)
 
-        submit_btn = st.button("🚀 Route & Solve Challenge", type="primary", width="stretch")
+        submit_btn = st.button("Route & Solve Challenge", type="primary", width="stretch")
 
     # -------------------------------------------------------------------------
     # Execution & Result Presentation
@@ -685,7 +684,7 @@ with tab_demo:
 
         if submit_btn:
             if not selected_file_path or not os.path.exists(selected_file_path):
-                st.warning("⚠️ Please select or upload a valid challenge file first.")
+                st.warning("Please select or upload a valid challenge file first.")
             else:
                 t0 = time.time()
                 try:
@@ -780,16 +779,16 @@ with tab_demo:
 
                     format_warning = result.get("details", {}).get("format_warning")
                     if format_warning:
-                        st.warning(f"⚠️ **Format Advisory:** {format_warning}")
+                        st.warning(f"Format Advisory: {format_warning}")
 
-                    with st.expander("🔍 Detailed Specialist Diagnostics", expanded=False):
+                    with st.expander("Detailed Specialist Diagnostics", expanded=False):
                         st.json(result["details"])
 
                 except InvalidInputError as exc:
                     st.markdown(
                         f"""
                         <div class="validation-alert">
-                            <h3 style="margin: 0 0 10px 0; color: #991B1B; font-size: 1.3rem;">❌ Input Validation Rejected</h3>
+                            <h3 style="margin: 0 0 10px 0; color: #991B1B; font-size: 1.3rem;">Input Validation Rejected</h3>
                             <p style="margin: 0; font-size: 1.1rem; line-height: 1.6; color: #7F1D1D;">{exc}</p>
                         </div>
                         """,
@@ -797,27 +796,26 @@ with tab_demo:
                     )
                     st.markdown(
                         "<p style='font-size: 1.05rem; color: #415A77; margin-top: 8px;'>"
-                        "ℹ️ <b>Graceful Failure Policy:</b> The pipeline validates input formats, grid aspect ratios (~1:1), "
+                        "<b>Graceful Failure Policy:</b> The pipeline validates input formats, grid aspect ratios (~1:1), "
                         "and audio integrity before execution to prevent unhandled runtime exceptions.</p>",
                         unsafe_allow_html=True
                     )
 
                 except Exception as exc:
-                    st.error(f"❌ Unexpected Processing Error: {exc}")
+                    st.error(f"Unexpected Processing Error: {exc}")
 
         else:
-            st.info("👈 Select a challenge from the left panel and click **'Route & Solve Challenge'** to run the live pipeline.")
+            st.info("Select a challenge from the left panel and click **'Route & Solve Challenge'** to run the live pipeline.")
 
     # -------------------------------------------------------------------------
     # 5. Known Limitations Expandable Note
     # -------------------------------------------------------------------------
     st.markdown("---")
-    with st.expander("ℹ️ Known Limitations & Honest Methodology Disclosures", expanded=True):
+    with st.expander("Known Limitations & Methodology Disclosures", expanded=True):
         st.html(
             """
             <div class="limitations-card">
                 <div class="limitations-item">
-                    <span class="limitations-icon">🎙️</span>
                     <div>
                         <b style="color: #0D1B2A; font-size: 1.15rem;">Audio Specialist Benchmark Accuracy:</b><br>
                         The audio specialist achieves <b style="color: #1B263B;">80.0% exact match (8/10 on the test split, 16/20 across all 20 real challenges)</b> 
@@ -828,7 +826,6 @@ with tab_demo:
                     </div>
                 </div>
                 <div class="limitations-item">
-                    <span class="limitations-icon">🖼️</span>
                     <div>
                         <b style="color: #0D1B2A; font-size: 1.15rem;">Visual Specialist Constraints:</b><br>
                         The visual specialist relies on CLIP zero-shot classification 
@@ -837,7 +834,6 @@ with tab_demo:
                     </div>
                 </div>
                 <div class="limitations-item">
-                    <span class="limitations-icon">🛡️</span>
                     <div>
                         <b style="color: #0D1B2A; font-size: 1.15rem;">Strict Leakage Prevention & Dataset Separation:</b><br>
                         The 10 frontend showcase samples (<code>sample_data/</code>) and 10 held-out test samples (<code>test_data/</code>) are 
